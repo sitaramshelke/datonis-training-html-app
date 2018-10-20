@@ -1,0 +1,11 @@
+.justified-form {
+  display: flex;
+  justify-content: space-evenly;
+  background: #dfdfdf;
+  padding: 30px 0px;
+  align-items: center;
+}
+
+.thing-select {
+  min-width: 200px;
+}
