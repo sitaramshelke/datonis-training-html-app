@@ -15,48 +15,11 @@ function loadThings() {
   });
 }
 
-// This function is called after `Load` button is clicked from the UI, this will get the thing key and the date. Then it will make a function call to get thing data.
+
 function loadChart() {
-  var date = document.getElementById("date").value;
-  var thingKey = document.getElementById("thingSelect").value;
-  if (date == undefined || date == "") {
-    alert("Please select a valid date");
-  } else {
-    loadThingData(thingKey, date);
-  }
+  loadData();
 }
 
-// This function is called by `loadChart`, it prepares all the necessary request data necessary and will make a call to get the thing data. Once thing data is recieved, it will call `loadData` to render data in the form of a chart.
-function loadThingData(thingKey, date) {
-  var data = JSON.stringify({
-    thing_key: thingKey,
-    from: date + " 00:00:00",
-    to: date + " 23:59:59",
-    order: "asc",
-    time_zone: "Mumbai",
-    time_format: "str",
-    per: "10000",
-    metrics: ["machine.status", "job.count"]
-  });
-
-  requestData("POST", "/get_thing_data", data, function(data) {
-    var result = data[thingKey];
-    var eventData = result.event_data;
-    var machineStatusData = [];
-    var jobCountData = [];
-    var labels = [];
-    for (let i = 0; i < eventData.length; i++) {
-      const item = eventData[i];
-      const data = item.data;
-      labels.push(item.timestamp);
-      machineStatusData.push(data.machine.status || 0);
-      jobCountData.push(data.job.count || 0);
-    }
-    loadData(labels, machineStatusData, jobCountData);
-  });
-}
-
-// This function takes axis labels, and data to be plotted across y axis.
 function loadData(labels, machineStatusData, jobCountData) {
   // First we will clear existing chart if any;
   $('#myChart').remove();
@@ -65,20 +28,20 @@ function loadData(labels, machineStatusData, jobCountData) {
   // Then we create our chart.
   var ctx = document.getElementById("myChart");
   myChart = new Chart(ctx, {
-    type: "line",
+    type: "bar",
     data: {
-      labels: labels,
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
       datasets: [
         {
-          label: "Machine Status",
-          data: machineStatusData,
+          label: "Shoes",
+          data: [100, 113, 87, 98, 95, 130, 142, 93, 85, 75, 85, 93],
           backgroundColor: "#fd2423",
           borderColor: "#fd2423",
           fill: false
         },
         {
-          label: "Job Count",
-          data: jobCountData,
+          label: "Sandals",
+          data: [95, 83, 97, 88, 105, 114, 92, 103, 105, 99, 115, 103],
           backgroundColor: "#fd8423",
           borderColor: "#fd8423",
           fill: false
