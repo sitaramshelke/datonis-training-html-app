@@ -1,6 +1,6 @@
 ## Datonis Training 
 
-This repository contains a simple web application. The purpose is to showcase how one can use Datonis [APIs](https://api.datonis.io) to build custom web applications.
+This repository contains a simple web application. The purpose is to showcase how one can use Datonis [APIs](https://api.datonis.io/apidoc) to build custom web applications.
 
 ### To run the application - 
 - Clone this repo.
@@ -16,16 +16,18 @@ This application uses -
 - [Skeleton](http://getskeleton.com) for minimal CSS.
 
 Application structure is as follows - 
+```
 - config/
-  - `datonis.js //This is where one needs to update their access key.`
+  - datonis.js //This is where one needs to update their access key.
 - lib/
-  - `datonis.js //This provides a utility to make calls to Datonis API server.`
-  - `thing.js //This provides HTTP request handlers for backend server.`
+  - datonis.js //This provides a utility to make calls to Datonis API server.
+  - thing.js //This provides HTTP request handlers for backend server.
 - node_modules/
-  - `.. //All external dependencies`
+  - .. //All external dependencies
 - public/
-  - `application.css //All custom css required.`
-  - `index.html //HTML code for the simple UI.`
-  - `index.js //JS that runs along the HTML and handles browser actions.`
-  - `skeleton.css //Skeleton CSS.`
-- `application.js //This has the logic for backend server.`
+  - application.css //All custom css required.
+  - index.html //HTML code for the simple UI.
+  - index.js //JS that runs along the HTML and handles browser actions.
+  - skeleton.css //Skeleton CSS.
+- application.js //This has the logic for backend server.
+```
