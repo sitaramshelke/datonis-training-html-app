@@ -29,28 +29,33 @@ function loadChart() {
 // This function is called by `loadChart`, it prepares all the necessary request data necessary and will make a call to get the thing data. Once thing data is recieved, it will call `loadData` to render data in the form of a chart.
 function loadThingData(thingKey, date) {
   var data = JSON.stringify({
-    thing_key: thingKey,
+    thing_keys: [thingKey],
     from: date + " 00:00:00",
     to: date + " 23:59:59",
     order: "asc",
+    time_grouping: "minute",
+    time_grouping_value: 10,
     time_zone: "Mumbai",
     time_format: "str",
     per: "10000",
-    metrics: ["machine.status", "job.count"]
+    metrics: []
   });
 
-  requestData("POST", "/get_thing_data", data, function(data) {
-    var result = data[thingKey];
-    var eventData = result.event_data;
+  requestData("POST", "/thing_aggregated_data", data, function(data) {
+    var timeGroupedResult = data.time_grouped_result;
     var machineStatusData = [];
     var jobCountData = [];
     var labels = [];
-    for (let i = 0; i < eventData.length; i++) {
-      const item = eventData[i];
-      const data = item.data;
-      labels.push(item.timestamp);
-      machineStatusData.push(data.machine.status || 0);
-      jobCountData.push(data.job.count || 0);
+    for (const timeStr in timeGroupedResult) {
+      if (timeGroupedResult.hasOwnProperty(timeStr)) {
+        const thingsResult = timeGroupedResult[timeStr];
+        const thingResult = thingsResult[thingKey];
+        labels.push(timeStr);
+        machineStatusData.push(
+          (thingResult['machine.status'].count > 0 && thingResult['machine.status'].sum) || 0
+        );
+        jobCountData.push((thingResult['job.count'] > 0 && thingResult['job.count'].sum) || 0);
+      }
     }
     loadData(labels, machineStatusData, jobCountData);
   });
@@ -59,8 +64,8 @@ function loadThingData(thingKey, date) {
 // This function takes axis labels, and data to be plotted across y axis.
 function loadData(labels, machineStatusData, jobCountData) {
   // First we will clear existing chart if any;
-  $('#myChart').remove();
-  $('#chartContainer').append('<canvas id="myChart" height="400"></canvas>');
+  $("#myChart").remove();
+  $("#chartContainer").append('<canvas id="myChart" height="400"></canvas>');
 
   // Then we create our chart.
   var ctx = document.getElementById("myChart");
@@ -86,7 +91,7 @@ function loadData(labels, machineStatusData, jobCountData) {
       ]
     },
     options: {
-      maintainAspectRatio: false,
+      maintainAspectRatio: false
     }
   });
 }
