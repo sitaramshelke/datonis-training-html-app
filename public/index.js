@@ -38,31 +38,31 @@ function loadThingData(thingKey, date) {
     time_zone: "Mumbai",
     time_format: "str",
     per: "10000",
-    metrics: []
+    metrics: ["humidity", "temperature"]
   });
 
   requestData("POST", "/thing_aggregated_data", data, function(data) {
     var timeGroupedResult = data.time_grouped_result;
-    var machineStatusData = [];
-    var jobCountData = [];
+    var humidityData = [];
+    var temperatureData = [];
     var labels = [];
     for (const timeStr in timeGroupedResult) {
       if (timeGroupedResult.hasOwnProperty(timeStr)) {
         const thingsResult = timeGroupedResult[timeStr];
         const thingResult = thingsResult[thingKey];
         labels.push(timeStr);
-        machineStatusData.push(
-          (thingResult['machine.status'].count > 0 && thingResult['machine.status'].sum) || 0
+        humidityData.push(
+          (thingResult['humidity'].count > 0 && thingResult['humidity'].avg) || 0
         );
-        jobCountData.push((thingResult['job.count'] > 0 && thingResult['job.count'].sum) || 0);
+        temperatureData.push((thingResult['temperature'].count > 0 && thingResult['temperature'].avg) || 0);
       }
     }
-    loadData(labels, machineStatusData, jobCountData);
+    loadData(labels, humidityData, temperatureData);
   });
 }
 
 // This function takes axis labels, and data to be plotted across y axis.
-function loadData(labels, machineStatusData, jobCountData) {
+function loadData(labels, humidityData, temperatureData) {
   // First we will clear existing chart if any;
   $("#myChart").remove();
   $("#chartContainer").append('<canvas id="myChart" height="400"></canvas>');
@@ -75,15 +75,15 @@ function loadData(labels, machineStatusData, jobCountData) {
       labels: labels,
       datasets: [
         {
-          label: "Machine Status",
-          data: machineStatusData,
+          label: "Humidity",
+          data: humidityData,
           backgroundColor: "#fd2423",
           borderColor: "#fd2423",
           fill: false
         },
         {
-          label: "Job Count",
-          data: jobCountData,
+          label: "temperature",
+          data: temperatureData,
           backgroundColor: "#fd8423",
           borderColor: "#fd8423",
           fill: false
