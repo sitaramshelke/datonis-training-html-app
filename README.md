@@ -4,7 +4,7 @@ This repository contains a simple web application. The purpose is to showcase ho
 
 ### To run the application - 
 - Clone this repo.
-- Run `npn install`
+- Run `npm install`
 - Update `config/datonis.js` with your valid Access Key.
 - Run `node application.js`
 - Open `http://localhost:3000` in your browser tab.
