@@ -5,7 +5,7 @@ This repository contains a simple web application. The purpose is to showcase ho
 ### To run the application - 
 - Clone this repo.
 - Run `npm install`
-- Update `config/datonis.js` with your valid Access Key.
+- Update `config/datonis.js` with your valid Auth token. Auth token can be received using this [API](https://api.datonis.io/apidoc/3.0/Sessions/api_sign_in.html) .
 - Run `node application.js`
 - Open `http://localhost:3000` in your browser tab.
 
